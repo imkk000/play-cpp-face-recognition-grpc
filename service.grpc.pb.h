@@ -26,49 +26,69 @@
 #include <grpcpp/support/sync_stream.h>
 #include <grpcpp/ports_def.inc>
 
-class MessageService final {
+class FaceRecognitionService final {
  public:
   static constexpr char const* service_full_name() {
-    return "MessageService";
+    return "FaceRecognitionService";
   }
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    virtual ::grpc::Status Ping(::grpc::ClientContext* context, const ::PingRequest& request, ::PingResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::PingResponse>> AsyncPing(::grpc::ClientContext* context, const ::PingRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::PingResponse>>(AsyncPingRaw(context, request, cq));
+    virtual ::grpc::Status DetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::DetectFacesResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::DetectFacesResponse>> AsyncDetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::DetectFacesResponse>>(AsyncDetectFacesRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::PingResponse>> PrepareAsyncPing(::grpc::ClientContext* context, const ::PingRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::PingResponse>>(PrepareAsyncPingRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::DetectFacesResponse>> PrepareAsyncDetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::DetectFacesResponse>>(PrepareAsyncDetectFacesRaw(context, request, cq));
+    }
+    virtual ::grpc::Status RecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::RecognizeFacesResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::RecognizeFacesResponse>> AsyncRecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::RecognizeFacesResponse>>(AsyncRecognizeFacesRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::RecognizeFacesResponse>> PrepareAsyncRecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::RecognizeFacesResponse>>(PrepareAsyncRecognizeFacesRaw(context, request, cq));
     }
     class async_interface {
      public:
       virtual ~async_interface() {}
-      virtual void Ping(::grpc::ClientContext* context, const ::PingRequest* request, ::PingResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void Ping(::grpc::ClientContext* context, const ::PingRequest* request, ::PingResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void DetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest* request, ::DetectFacesResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void DetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest* request, ::DetectFacesResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void RecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest* request, ::RecognizeFacesResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void RecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest* request, ::RecognizeFacesResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
     class async_interface* experimental_async() { return async(); }
    private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::PingResponse>* AsyncPingRaw(::grpc::ClientContext* context, const ::PingRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::PingResponse>* PrepareAsyncPingRaw(::grpc::ClientContext* context, const ::PingRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::DetectFacesResponse>* AsyncDetectFacesRaw(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::DetectFacesResponse>* PrepareAsyncDetectFacesRaw(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::RecognizeFacesResponse>* AsyncRecognizeFacesRaw(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::RecognizeFacesResponse>* PrepareAsyncRecognizeFacesRaw(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
-    ::grpc::Status Ping(::grpc::ClientContext* context, const ::PingRequest& request, ::PingResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::PingResponse>> AsyncPing(::grpc::ClientContext* context, const ::PingRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::PingResponse>>(AsyncPingRaw(context, request, cq));
+    ::grpc::Status DetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::DetectFacesResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::DetectFacesResponse>> AsyncDetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::DetectFacesResponse>>(AsyncDetectFacesRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::PingResponse>> PrepareAsyncPing(::grpc::ClientContext* context, const ::PingRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::PingResponse>>(PrepareAsyncPingRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::DetectFacesResponse>> PrepareAsyncDetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::DetectFacesResponse>>(PrepareAsyncDetectFacesRaw(context, request, cq));
+    }
+    ::grpc::Status RecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::RecognizeFacesResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::RecognizeFacesResponse>> AsyncRecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::RecognizeFacesResponse>>(AsyncRecognizeFacesRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::RecognizeFacesResponse>> PrepareAsyncRecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::RecognizeFacesResponse>>(PrepareAsyncRecognizeFacesRaw(context, request, cq));
     }
     class async final :
       public StubInterface::async_interface {
      public:
-      void Ping(::grpc::ClientContext* context, const ::PingRequest* request, ::PingResponse* response, std::function<void(::grpc::Status)>) override;
-      void Ping(::grpc::ClientContext* context, const ::PingRequest* request, ::PingResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void DetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest* request, ::DetectFacesResponse* response, std::function<void(::grpc::Status)>) override;
+      void DetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest* request, ::DetectFacesResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void RecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest* request, ::RecognizeFacesResponse* response, std::function<void(::grpc::Status)>) override;
+      void RecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest* request, ::RecognizeFacesResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
      private:
       friend class Stub;
       explicit async(Stub* stub): stub_(stub) { }
@@ -80,9 +100,12 @@ class MessageService final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class async async_stub_{this};
-    ::grpc::ClientAsyncResponseReader< ::PingResponse>* AsyncPingRaw(::grpc::ClientContext* context, const ::PingRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::PingResponse>* PrepareAsyncPingRaw(::grpc::ClientContext* context, const ::PingRequest& request, ::grpc::CompletionQueue* cq) override;
-    const ::grpc::internal::RpcMethod rpcmethod_Ping_;
+    ::grpc::ClientAsyncResponseReader< ::DetectFacesResponse>* AsyncDetectFacesRaw(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::DetectFacesResponse>* PrepareAsyncDetectFacesRaw(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::RecognizeFacesResponse>* AsyncRecognizeFacesRaw(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::RecognizeFacesResponse>* PrepareAsyncRecognizeFacesRaw(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::grpc::CompletionQueue* cq) override;
+    const ::grpc::internal::RpcMethod rpcmethod_DetectFaces_;
+    const ::grpc::internal::RpcMethod rpcmethod_RecognizeFaces_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -90,147 +113,281 @@ class MessageService final {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status Ping(::grpc::ServerContext* context, const ::PingRequest* request, ::PingResponse* response);
+    virtual ::grpc::Status DetectFaces(::grpc::ServerContext* context, const ::DetectFacesRequest* request, ::DetectFacesResponse* response);
+    virtual ::grpc::Status RecognizeFaces(::grpc::ServerContext* context, const ::RecognizeFacesRequest* request, ::RecognizeFacesResponse* response);
   };
   template <class BaseClass>
-  class WithAsyncMethod_Ping : public BaseClass {
+  class WithAsyncMethod_DetectFaces : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithAsyncMethod_Ping() {
+    WithAsyncMethod_DetectFaces() {
       ::grpc::Service::MarkMethodAsync(0);
     }
-    ~WithAsyncMethod_Ping() override {
+    ~WithAsyncMethod_DetectFaces() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::PingRequest* /*request*/, ::PingResponse* /*response*/) override {
+    ::grpc::Status DetectFaces(::grpc::ServerContext* /*context*/, const ::DetectFacesRequest* /*request*/, ::DetectFacesResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestPing(::grpc::ServerContext* context, ::PingRequest* request, ::grpc::ServerAsyncResponseWriter< ::PingResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestDetectFaces(::grpc::ServerContext* context, ::DetectFacesRequest* request, ::grpc::ServerAsyncResponseWriter< ::DetectFacesResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_Ping<Service > AsyncService;
   template <class BaseClass>
-  class WithCallbackMethod_Ping : public BaseClass {
+  class WithAsyncMethod_RecognizeFaces : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_Ping() {
+    WithAsyncMethod_RecognizeFaces() {
+      ::grpc::Service::MarkMethodAsync(1);
+    }
+    ~WithAsyncMethod_RecognizeFaces() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status RecognizeFaces(::grpc::ServerContext* /*context*/, const ::RecognizeFacesRequest* /*request*/, ::RecognizeFacesResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestRecognizeFaces(::grpc::ServerContext* context, ::RecognizeFacesRequest* request, ::grpc::ServerAsyncResponseWriter< ::RecognizeFacesResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_DetectFaces<WithAsyncMethod_RecognizeFaces<Service > > AsyncService;
+  template <class BaseClass>
+  class WithCallbackMethod_DetectFaces : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithCallbackMethod_DetectFaces() {
       ::grpc::Service::MarkMethodCallback(0,
-          new ::grpc::internal::CallbackUnaryHandler< ::PingRequest, ::PingResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::DetectFacesRequest, ::DetectFacesResponse>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::PingRequest* request, ::PingResponse* response) { return this->Ping(context, request, response); }));}
-    void SetMessageAllocatorFor_Ping(
-        ::grpc::MessageAllocator< ::PingRequest, ::PingResponse>* allocator) {
+                   ::grpc::CallbackServerContext* context, const ::DetectFacesRequest* request, ::DetectFacesResponse* response) { return this->DetectFaces(context, request, response); }));}
+    void SetMessageAllocatorFor_DetectFaces(
+        ::grpc::MessageAllocator< ::DetectFacesRequest, ::DetectFacesResponse>* allocator) {
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::PingRequest, ::PingResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::DetectFacesRequest, ::DetectFacesResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_Ping() override {
+    ~WithCallbackMethod_DetectFaces() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::PingRequest* /*request*/, ::PingResponse* /*response*/) override {
+    ::grpc::Status DetectFaces(::grpc::ServerContext* /*context*/, const ::DetectFacesRequest* /*request*/, ::DetectFacesResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerUnaryReactor* Ping(
-      ::grpc::CallbackServerContext* /*context*/, const ::PingRequest* /*request*/, ::PingResponse* /*response*/)  { return nullptr; }
+    virtual ::grpc::ServerUnaryReactor* DetectFaces(
+      ::grpc::CallbackServerContext* /*context*/, const ::DetectFacesRequest* /*request*/, ::DetectFacesResponse* /*response*/)  { return nullptr; }
   };
-  typedef WithCallbackMethod_Ping<Service > CallbackService;
+  template <class BaseClass>
+  class WithCallbackMethod_RecognizeFaces : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithCallbackMethod_RecognizeFaces() {
+      ::grpc::Service::MarkMethodCallback(1,
+          new ::grpc::internal::CallbackUnaryHandler< ::RecognizeFacesRequest, ::RecognizeFacesResponse>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::RecognizeFacesRequest* request, ::RecognizeFacesResponse* response) { return this->RecognizeFaces(context, request, response); }));}
+    void SetMessageAllocatorFor_RecognizeFaces(
+        ::grpc::MessageAllocator< ::RecognizeFacesRequest, ::RecognizeFacesResponse>* allocator) {
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::RecognizeFacesRequest, ::RecognizeFacesResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~WithCallbackMethod_RecognizeFaces() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status RecognizeFaces(::grpc::ServerContext* /*context*/, const ::RecognizeFacesRequest* /*request*/, ::RecognizeFacesResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerUnaryReactor* RecognizeFaces(
+      ::grpc::CallbackServerContext* /*context*/, const ::RecognizeFacesRequest* /*request*/, ::RecognizeFacesResponse* /*response*/)  { return nullptr; }
+  };
+  typedef WithCallbackMethod_DetectFaces<WithCallbackMethod_RecognizeFaces<Service > > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
-  class WithGenericMethod_Ping : public BaseClass {
+  class WithGenericMethod_DetectFaces : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithGenericMethod_Ping() {
+    WithGenericMethod_DetectFaces() {
       ::grpc::Service::MarkMethodGeneric(0);
     }
-    ~WithGenericMethod_Ping() override {
+    ~WithGenericMethod_DetectFaces() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::PingRequest* /*request*/, ::PingResponse* /*response*/) override {
+    ::grpc::Status DetectFaces(::grpc::ServerContext* /*context*/, const ::DetectFacesRequest* /*request*/, ::DetectFacesResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
   };
   template <class BaseClass>
-  class WithRawMethod_Ping : public BaseClass {
+  class WithGenericMethod_RecognizeFaces : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawMethod_Ping() {
-      ::grpc::Service::MarkMethodRaw(0);
+    WithGenericMethod_RecognizeFaces() {
+      ::grpc::Service::MarkMethodGeneric(1);
     }
-    ~WithRawMethod_Ping() override {
+    ~WithGenericMethod_RecognizeFaces() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::PingRequest* /*request*/, ::PingResponse* /*response*/) override {
+    ::grpc::Status RecognizeFaces(::grpc::ServerContext* /*context*/, const ::RecognizeFacesRequest* /*request*/, ::RecognizeFacesResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestPing(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+  };
+  template <class BaseClass>
+  class WithRawMethod_DetectFaces : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_DetectFaces() {
+      ::grpc::Service::MarkMethodRaw(0);
+    }
+    ~WithRawMethod_DetectFaces() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status DetectFaces(::grpc::ServerContext* /*context*/, const ::DetectFacesRequest* /*request*/, ::DetectFacesResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestDetectFaces(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_Ping : public BaseClass {
+  class WithRawMethod_RecognizeFaces : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_Ping() {
+    WithRawMethod_RecognizeFaces() {
+      ::grpc::Service::MarkMethodRaw(1);
+    }
+    ~WithRawMethod_RecognizeFaces() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status RecognizeFaces(::grpc::ServerContext* /*context*/, const ::RecognizeFacesRequest* /*request*/, ::RecognizeFacesResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestRecognizeFaces(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawCallbackMethod_DetectFaces : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawCallbackMethod_DetectFaces() {
       ::grpc::Service::MarkMethodRawCallback(0,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->Ping(context, request, response); }));
+                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->DetectFaces(context, request, response); }));
     }
-    ~WithRawCallbackMethod_Ping() override {
+    ~WithRawCallbackMethod_DetectFaces() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::PingRequest* /*request*/, ::PingResponse* /*response*/) override {
+    ::grpc::Status DetectFaces(::grpc::ServerContext* /*context*/, const ::DetectFacesRequest* /*request*/, ::DetectFacesResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerUnaryReactor* Ping(
+    virtual ::grpc::ServerUnaryReactor* DetectFaces(
       ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
-  class WithStreamedUnaryMethod_Ping : public BaseClass {
+  class WithRawCallbackMethod_RecognizeFaces : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithStreamedUnaryMethod_Ping() {
+    WithRawCallbackMethod_RecognizeFaces() {
+      ::grpc::Service::MarkMethodRawCallback(1,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->RecognizeFaces(context, request, response); }));
+    }
+    ~WithRawCallbackMethod_RecognizeFaces() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status RecognizeFaces(::grpc::ServerContext* /*context*/, const ::RecognizeFacesRequest* /*request*/, ::RecognizeFacesResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerUnaryReactor* RecognizeFaces(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_DetectFaces : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_DetectFaces() {
       ::grpc::Service::MarkMethodStreamed(0,
         new ::grpc::internal::StreamedUnaryHandler<
-          ::PingRequest, ::PingResponse>(
+          ::DetectFacesRequest, ::DetectFacesResponse>(
             [this](::grpc::ServerContext* context,
                    ::grpc::ServerUnaryStreamer<
-                     ::PingRequest, ::PingResponse>* streamer) {
-                       return this->StreamedPing(context,
+                     ::DetectFacesRequest, ::DetectFacesResponse>* streamer) {
+                       return this->StreamedDetectFaces(context,
                          streamer);
                   }));
     }
-    ~WithStreamedUnaryMethod_Ping() override {
+    ~WithStreamedUnaryMethod_DetectFaces() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status Ping(::grpc::ServerContext* /*context*/, const ::PingRequest* /*request*/, ::PingResponse* /*response*/) override {
+    ::grpc::Status DetectFaces(::grpc::ServerContext* /*context*/, const ::DetectFacesRequest* /*request*/, ::DetectFacesResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedPing(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::PingRequest,::PingResponse>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedDetectFaces(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::DetectFacesRequest,::DetectFacesResponse>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_Ping<Service > StreamedUnaryService;
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_RecognizeFaces : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_RecognizeFaces() {
+      ::grpc::Service::MarkMethodStreamed(1,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::RecognizeFacesRequest, ::RecognizeFacesResponse>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::RecognizeFacesRequest, ::RecognizeFacesResponse>* streamer) {
+                       return this->StreamedRecognizeFaces(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_RecognizeFaces() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status RecognizeFaces(::grpc::ServerContext* /*context*/, const ::RecognizeFacesRequest* /*request*/, ::RecognizeFacesResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedRecognizeFaces(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::RecognizeFacesRequest,::RecognizeFacesResponse>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_DetectFaces<WithStreamedUnaryMethod_RecognizeFaces<Service > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_Ping<Service > StreamedService;
+  typedef WithStreamedUnaryMethod_DetectFaces<WithStreamedUnaryMethod_RecognizeFaces<Service > > StreamedService;
 };
 
 

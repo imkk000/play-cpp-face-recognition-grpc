@@ -21,60 +21,102 @@
 #include <grpcpp/support/sync_stream.h>
 #include <grpcpp/ports_def.inc>
 
-static const char* MessageService_method_names[] = {
-  "/MessageService/Ping",
+static const char* FaceRecognitionService_method_names[] = {
+  "/FaceRecognitionService/DetectFaces",
+  "/FaceRecognitionService/RecognizeFaces",
 };
 
-std::unique_ptr< MessageService::Stub> MessageService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
+std::unique_ptr< FaceRecognitionService::Stub> FaceRecognitionService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
   (void)options;
-  std::unique_ptr< MessageService::Stub> stub(new MessageService::Stub(channel, options));
+  std::unique_ptr< FaceRecognitionService::Stub> stub(new FaceRecognitionService::Stub(channel, options));
   return stub;
 }
 
-MessageService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
-  : channel_(channel), rpcmethod_Ping_(MessageService_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+FaceRecognitionService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
+  : channel_(channel), rpcmethod_DetectFaces_(FaceRecognitionService_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_RecognizeFaces_(FaceRecognitionService_method_names[1], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
-::grpc::Status MessageService::Stub::Ping(::grpc::ClientContext* context, const ::PingRequest& request, ::PingResponse* response) {
-  return ::grpc::internal::BlockingUnaryCall< ::PingRequest, ::PingResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_Ping_, context, request, response);
+::grpc::Status FaceRecognitionService::Stub::DetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::DetectFacesResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::DetectFacesRequest, ::DetectFacesResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_DetectFaces_, context, request, response);
 }
 
-void MessageService::Stub::async::Ping(::grpc::ClientContext* context, const ::PingRequest* request, ::PingResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc::internal::CallbackUnaryCall< ::PingRequest, ::PingResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_Ping_, context, request, response, std::move(f));
+void FaceRecognitionService::Stub::async::DetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest* request, ::DetectFacesResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::DetectFacesRequest, ::DetectFacesResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_DetectFaces_, context, request, response, std::move(f));
 }
 
-void MessageService::Stub::async::Ping(::grpc::ClientContext* context, const ::PingRequest* request, ::PingResponse* response, ::grpc::ClientUnaryReactor* reactor) {
-  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_Ping_, context, request, response, reactor);
+void FaceRecognitionService::Stub::async::DetectFaces(::grpc::ClientContext* context, const ::DetectFacesRequest* request, ::DetectFacesResponse* response, ::grpc::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_DetectFaces_, context, request, response, reactor);
 }
 
-::grpc::ClientAsyncResponseReader< ::PingResponse>* MessageService::Stub::PrepareAsyncPingRaw(::grpc::ClientContext* context, const ::PingRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::PingResponse, ::PingRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_Ping_, context, request);
+::grpc::ClientAsyncResponseReader< ::DetectFacesResponse>* FaceRecognitionService::Stub::PrepareAsyncDetectFacesRaw(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::DetectFacesResponse, ::DetectFacesRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_DetectFaces_, context, request);
 }
 
-::grpc::ClientAsyncResponseReader< ::PingResponse>* MessageService::Stub::AsyncPingRaw(::grpc::ClientContext* context, const ::PingRequest& request, ::grpc::CompletionQueue* cq) {
+::grpc::ClientAsyncResponseReader< ::DetectFacesResponse>* FaceRecognitionService::Stub::AsyncDetectFacesRaw(::grpc::ClientContext* context, const ::DetectFacesRequest& request, ::grpc::CompletionQueue* cq) {
   auto* result =
-    this->PrepareAsyncPingRaw(context, request, cq);
+    this->PrepareAsyncDetectFacesRaw(context, request, cq);
   result->StartCall();
   return result;
 }
 
-MessageService::Service::Service() {
+::grpc::Status FaceRecognitionService::Stub::RecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::RecognizeFacesResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::RecognizeFacesRequest, ::RecognizeFacesResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_RecognizeFaces_, context, request, response);
+}
+
+void FaceRecognitionService::Stub::async::RecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest* request, ::RecognizeFacesResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::RecognizeFacesRequest, ::RecognizeFacesResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_RecognizeFaces_, context, request, response, std::move(f));
+}
+
+void FaceRecognitionService::Stub::async::RecognizeFaces(::grpc::ClientContext* context, const ::RecognizeFacesRequest* request, ::RecognizeFacesResponse* response, ::grpc::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_RecognizeFaces_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::RecognizeFacesResponse>* FaceRecognitionService::Stub::PrepareAsyncRecognizeFacesRaw(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::RecognizeFacesResponse, ::RecognizeFacesRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_RecognizeFaces_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::RecognizeFacesResponse>* FaceRecognitionService::Stub::AsyncRecognizeFacesRaw(::grpc::ClientContext* context, const ::RecognizeFacesRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncRecognizeFacesRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
+FaceRecognitionService::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      MessageService_method_names[0],
+      FaceRecognitionService_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< MessageService::Service, ::PingRequest, ::PingResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
-          [](MessageService::Service* service,
+      new ::grpc::internal::RpcMethodHandler< FaceRecognitionService::Service, ::DetectFacesRequest, ::DetectFacesResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](FaceRecognitionService::Service* service,
              ::grpc::ServerContext* ctx,
-             const ::PingRequest* req,
-             ::PingResponse* resp) {
-               return service->Ping(ctx, req, resp);
+             const ::DetectFacesRequest* req,
+             ::DetectFacesResponse* resp) {
+               return service->DetectFaces(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      FaceRecognitionService_method_names[1],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< FaceRecognitionService::Service, ::RecognizeFacesRequest, ::RecognizeFacesResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](FaceRecognitionService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::RecognizeFacesRequest* req,
+             ::RecognizeFacesResponse* resp) {
+               return service->RecognizeFaces(ctx, req, resp);
              }, this)));
 }
 
-MessageService::Service::~Service() {
+FaceRecognitionService::Service::~Service() {
 }
 
-::grpc::Status MessageService::Service::Ping(::grpc::ServerContext* context, const ::PingRequest* request, ::PingResponse* response) {
+::grpc::Status FaceRecognitionService::Service::DetectFaces(::grpc::ServerContext* context, const ::DetectFacesRequest* request, ::DetectFacesResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status FaceRecognitionService::Service::RecognizeFaces(::grpc::ServerContext* context, const ::RecognizeFacesRequest* request, ::RecognizeFacesResponse* response) {
   (void) context;
   (void) request;
   (void) response;

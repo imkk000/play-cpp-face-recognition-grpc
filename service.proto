@@ -2,8 +2,45 @@ syntax = "proto3";
 
 option go_package = "/client;main";
 
-service MessageService { rpc Ping(PingRequest) returns (PingResponse); }
+service FaceRecognitionService {
+  rpc DetectFaces(DetectFacesRequest) returns (DetectFacesResponse);
+  rpc RecognizeFaces(RecognizeFacesRequest) returns (RecognizeFacesResponse);
+}
+message RecognizeFacesRequest {
+  message Face {
+    repeated float landmarks = 1;
+  }
+  repeated Face faces = 1;
+  bytes image = 2;
+}
 
-message PingRequest { string message = 1; }
+message RecognizeFacesResponse {
+  DetectFaceStatus.Enum status = 1;
+  bool valid = 2;
+}
 
-message PingResponse { string reply = 1; }
+message DetectFacesRequest {
+  repeated bytes images = 1;
+}
+
+message DetectFacesResponse {
+  message Face {
+    float x = 1;
+    float y = 2;
+    float width = 3;
+    float height = 4;
+    float confidence = 5;
+    repeated float landmarks = 6;
+  }
+  DetectFaceStatus.Enum status = 1;
+  repeated Face faces = 2;
+}
+
+message DetectFaceStatus {
+  enum Enum {
+    ENUM_UNSPECIFIED = 0;
+    ENUM_OK = 1;
+    ENUM_FAILED = 2;
+    ENUM_NO_FACES = 3;
+  }
+}
