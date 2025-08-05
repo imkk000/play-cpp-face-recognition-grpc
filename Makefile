@@ -1,7 +1,6 @@
 compile:
-	g++ -std=c++17 \
+	g++ -Wall -Werror -std=c++17 \
 			$(shell pkg-config --cflags --libs grpc++ protobuf opencv4) \
-			-lpthread -ldl \
 			-o server server.cc service.grpc.pb.cc service.pb.cc
 
 proto-go:
@@ -13,4 +12,5 @@ proto-go:
 proto-cpp:
 	rm -f *.pb.*
 	protoc --grpc_out=. --cpp_out=. service.proto \
+		# --plugin=protoc-gen-grpc=/opt/homebrew/bin/grpc_cpp_plugin
 		--plugin=protoc-gen-grpc=/usr/bin/grpc_cpp_plugin

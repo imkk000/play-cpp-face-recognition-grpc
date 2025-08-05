@@ -1,5 +1,4 @@
 #include "service.grpc.pb.h"
-#include <algorithm>
 #include <cstdlib>
 #include <grpc++/grpc++.h>
 #include <grpcpp/server_context.h>
@@ -15,7 +14,7 @@
 class FaceRecognitionServiceImpl : public FaceRecognitionService::Service {
 private:
   const std::string modelPath = "./models/yunet_n_320_320.onnx";
-  cv::Ptr<cv::FaceDetectorYN> detector = cv::FaceDetectorYN::create(modelPath, "", cv::Size(320, 320), 0.7, 0.3, 5000);
+  cv::Ptr<cv::FaceDetectorYN> detector = cv::FaceDetectorYN::create(modelPath, "", cv::Size(320, 320), 0.8, 0.3, 5000);
   cv::Ptr<cv::FaceRecognizerSF> recognizer = cv::FaceRecognizerSF::create(modelPath, "");
 
   std::vector<std::vector<int>> findCombination(long n) {
@@ -42,18 +41,57 @@ private:
     return faces.row(index);
   }
 
+  cv::Mat detectFaces(const std::string &data) {
+    std::vector<uchar> raw_data(data.begin(), data.end());
+    cv::Mat image = cv::imdecode(raw_data, cv::IMREAD_COLOR);
+    cv::Mat resized_image;
+
+    int target_size = 1080;
+    cv::resize(image, resized_image, cv::Size(target_size, image.rows * target_size / image.cols));
+
+    this->detector->setInputSize(image.size());
+    cv::Mat faces;
+    this->detector->detect(image, faces);
+    return faces;
+  }
+
 public:
-  grpc::Status DetectFaces(grpc::ServerContext *context,
-                           const DetectFacesRequest *request,
-                           DetectFacesResponse *response) override {
+  grpc::Status RecognizeFaces(grpc::ServerContext *context, const RecognizeFacesRequest *request, RecognizeFacesResponse *response) override {
+    std::cout << "\nReceived RecognizeFaces" << std::endl;
+
+    cv::Mat faces = this->detectFaces(request->image());
+    if (faces.empty()) {
+      response->set_status(DetectFaceStatus_Enum_ENUM_NO_FACES);
+      return grpc::Status::OK;
+    }
+    cv::Mat target_face = this->getFace(faces);
+    std::cout << "Detected faces: " << faces.rows << " " << target_face << std::endl;
+
+    for (const auto &face : request->faces()) {
+      const auto &landmarks = face.landmarks();
+      cv::Mat face_mat(1, landmarks.size(), CV_32F, (void *)landmarks.data());
+      std::cout << "Face Mat: " << face_mat << std::endl;
+
+      float score = this->recognizer->match(face_mat, target_face);
+      std::cout << "Matching face with score: " << score << std::endl;
+
+      if (score < 0.5) {
+        response->set_status(DetectFaceStatus_Enum_ENUM_NO_MATCH);
+        return grpc::Status::OK;
+      }
+    }
+    response->set_status(DetectFaceStatus_Enum_ENUM_OK);
+    response->set_valid(true);
+
+    return grpc::Status::OK;
+  }
+
+  grpc::Status DetectFaces(grpc::ServerContext *context, const DetectFacesRequest *request, DetectFacesResponse *response) override {
+    std::cout << "\nReceived DetectFaces" << std::endl;
 
     std::vector<cv::Mat> detected_faces;
     for (const auto &data : request->images()) {
-      std::vector<uchar> raw_data(data.begin(), data.end());
-      cv::Mat image = cv::imdecode(raw_data, cv::IMREAD_COLOR);
-      this->detector->setInputSize(image.size());
-      cv::Mat faces;
-      this->detector->detect(image, faces);
+      cv::Mat faces = this->detectFaces(data);
       if (faces.empty()) {
         response->set_status(DetectFaceStatus_Enum_ENUM_NO_FACES);
         response->clear_faces();
@@ -84,7 +122,15 @@ public:
       float score = this->recognizer->match(face1, face2);
 
       std::cout << "Matching faces (" << pair[0] << "," << pair[1] << "): " << score << std::endl;
+
+      if (score < 0.5) {
+        response->set_status(DetectFaceStatus_Enum_ENUM_NO_MATCH);
+        response->clear_faces();
+        return grpc::Status::OK;
+      }
     }
+
+    response->set_status(DetectFaceStatus_Enum_ENUM_OK);
     return grpc::Status::OK;
   }
 };
@@ -96,6 +142,9 @@ int main() {
   FaceRecognitionServiceImpl service;
 
   grpc::ServerBuilder builder;
+  builder.SetMaxSendMessageSize(100 * 1024 * 1024);
+  builder.SetMaxReceiveMessageSize(100 * 1024 * 1024);
+  builder.SetMaxMessageSize(100 * 1024 * 1024);
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
 

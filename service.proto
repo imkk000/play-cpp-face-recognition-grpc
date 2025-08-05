@@ -42,5 +42,6 @@ message DetectFaceStatus {
     ENUM_OK = 1;
     ENUM_FAILED = 2;
     ENUM_NO_FACES = 3;
+    ENUM_NO_MATCH = 4;
   }
 }
