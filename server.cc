@@ -136,8 +136,9 @@ public:
 };
 
 int main() {
-  const char *addr_env = std::getenv("ADDR");
-  std::string addr = addr_env ? addr_env : "0.0.0.0:50051";
+  const char *port_env = std::getenv("PORT");
+  std::string port = port_env ? port_env : "8080";
+  std::string addr = "0.0.0.0:" + port;
   std::string server_address(addr);
   FaceRecognitionServiceImpl service;
 
