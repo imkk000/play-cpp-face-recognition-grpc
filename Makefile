@@ -51,7 +51,7 @@ proto-cpp:
 	protoc --grpc_out=. --cpp_out=. service.proto \
 		--plugin=protoc-gen-grpc=/usr/bin/grpc_cpp_plugin
 
-proto-cpp-local:
+proto-cpp-homebrew:
 	rm -f *.pb.* && \
-	./lib/install/bin/protoc --grpc_out=. --cpp_out=. service.proto \
-		--plugin=protoc-gen-grpc=./lib/install/bin/grpc_cpp_plugin
+	protoc --grpc_out=. --cpp_out=. service.proto \
+		--plugin=protoc-gen-grpc=/opt/homebrew/bin/grpc_cpp_plugin

@@ -7,9 +7,6 @@ service FaceRecognitionService {
   rpc RecognizeFaces(RecognizeFacesRequest) returns (RecognizeFacesResponse);
 }
 message RecognizeFacesRequest {
-  message Face {
-    repeated float landmarks = 1;
-  }
   repeated Face faces = 1;
   bytes image = 2;
 }
@@ -24,14 +21,6 @@ message DetectFacesRequest {
 }
 
 message DetectFacesResponse {
-  message Face {
-    float x = 1;
-    float y = 2;
-    float width = 3;
-    float height = 4;
-    float confidence = 5;
-    repeated float landmarks = 6;
-  }
   DetectFaceStatus.Enum status = 1;
   repeated Face faces = 2;
 }
@@ -44,4 +33,8 @@ message DetectFaceStatus {
     ENUM_NO_FACES = 3;
     ENUM_NO_MATCH = 4;
   }
+}
+
+message Face {
+  repeated float landmarks = 1;
 }

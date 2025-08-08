@@ -2,16 +2,18 @@ package main
 
 import (
 	context "context"
+	"crypto/tls"
 	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
 	"strings"
+	"time"
 
 	"github.com/rs/zerolog/log"
 	"github.com/urfave/cli/v3"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 )
 
 const (
@@ -20,7 +22,8 @@ const (
 )
 
 func main() {
-	conn, err := grpc.NewClient("127.0.0.1:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("stg-face-recognition-api-internal.rizzup.com:8443", grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{InsecureSkipVerify: true})))
+	// conn, err := grpc.NewClient("127.0.0.1:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal().Err(err).Msg("connect to server")
 	}
@@ -51,19 +54,12 @@ func main() {
 					if err != nil {
 						return fmt.Errorf("detect faces: %w", err)
 					}
-					landmarksData := make([]*RecognizeFacesRequest_Face, len(resp.GetFaces()))
+					landmarksData := make([]*Face, len(resp.GetFaces()))
 					log.Info().Msgf("status: %v", resp.GetStatus())
 					for i, face := range resp.GetFaces() {
-						log.Info().Msgf("%d x: %f, y: %f", i, face.GetX(), face.GetY())
-						log.Info().Msgf("%d w: %f, h: %f", i, face.GetWidth(), face.GetHeight())
-						log.Info().Msgf("%d confidence: %f", i, face.GetConfidence())
 						log.Info().Msgf("%d landmarks: %v", i, face.GetLandmarks())
 
-						body := []float32{face.GetX(), face.GetY(), face.GetWidth(), face.GetHeight()}
-						body = append(body, face.GetLandmarks()...)
-						body = append(body, face.GetConfidence())
-
-						landmarksData[i] = &RecognizeFacesRequest_Face{Landmarks: body}
+						landmarksData[i] = &Face{Landmarks: face.GetLandmarks()}
 					}
 
 					files, _ = os.ReadDir(profilePath)
@@ -82,75 +78,22 @@ func main() {
 					images = slices.Clip(images)
 					filenames = slices.Clip(filenames)
 
-					for i, image := range images {
-						resp, err := client.RecognizeFaces(ctx, &RecognizeFacesRequest{
-							Faces: landmarksData,
-							Image: image,
-						})
-						if err != nil {
-							return fmt.Errorf("recognize faces: %s %w", filenames[i], err)
+					for {
+						for i, image := range images {
+							start := time.Now()
+							resp, err := client.RecognizeFaces(ctx, &RecognizeFacesRequest{
+								Faces: landmarksData,
+								Image: image,
+							})
+							if err != nil {
+								err = fmt.Errorf("recognize faces: %s %w", filenames[i], err)
+								log.Error().Msgf("index: %d: filename: %s, status: %v, since: %s", i, filenames[i], err, time.Since(start))
+								continue
+							}
+							log.Info().Msgf("index: %d: filename: %s, status: %v, matched: %v, since: %s", i, filenames[i], resp.GetStatus(), resp.GetValid(), time.Since(start))
 						}
-						log.Info().Msgf("index: %d: filename: %s, status: %v, matched: %v", i, filenames[i], resp.GetStatus(), resp.GetValid())
 					}
 
-					return nil
-				},
-			},
-			{
-				Name: "validate",
-				Action: func(_ context.Context, c *cli.Command) error {
-					files, _ := os.ReadDir(inputPath)
-					images := make([][]byte, len(files))
-					for i, file := range files {
-						fmt.Println("Reading file:", file.Name())
-						images[i], _ = os.ReadFile(filepath.Join(inputPath, file.Name()))
-					}
-
-					ctx := context.Background()
-					resp, err := client.DetectFaces(ctx, &DetectFacesRequest{Images: images})
-					if err != nil {
-						return fmt.Errorf("detect faces: %w", err)
-					}
-					log.Info().Msgf("status: %v", resp.GetStatus())
-					for i, face := range resp.GetFaces() {
-						log.Info().Msgf("%d x: %f, y: %f", i, face.GetX(), face.GetY())
-						log.Info().Msgf("%d w: %f, h: %f", i, face.GetWidth(), face.GetHeight())
-						log.Info().Msgf("%d confidence: %f", i, face.GetConfidence())
-						log.Info().Msgf("%d landmarks: %v", i, face.GetLandmarks())
-					}
-					return nil
-				},
-			},
-			{
-				Name: "verify",
-				Action: func(_ context.Context, c *cli.Command) error {
-					files, _ := os.ReadDir(profilePath)
-					images := make([][]byte, len(files))
-					for i, file := range files {
-						fmt.Println("Reading file:", file.Name())
-						images[i], _ = os.ReadFile(filepath.Join(profilePath, file.Name()))
-					}
-
-					ctx := context.Background()
-					resp, err := client.RecognizeFaces(ctx, &RecognizeFacesRequest{
-						Faces: []*RecognizeFacesRequest_Face{
-							{
-								Landmarks: []float32{},
-							},
-							{
-								Landmarks: []float32{},
-							},
-							{
-								Landmarks: []float32{},
-							},
-						},
-						Image: images[0],
-					})
-					if err != nil {
-						return fmt.Errorf("recognize faces: %w", err)
-					}
-					log.Info().Msgf("status: %v", resp.GetStatus())
-					log.Info().Msgf("matched: %v", resp.GetValid())
 					return nil
 				},
 			},

@@ -13,7 +13,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN make compile_minimal
+RUN make proto-cpp compile_minimal
 
 FROM archlinux:latest
 
